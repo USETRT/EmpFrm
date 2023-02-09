@@ -1,0 +1,2117 @@
+using System;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Windows.Forms;
+using Microsoft.VisualBasic;
+namespace BIOKNOX
+{
+    public partial class Frm_Employee : Form
+    {
+        Connection cn = new Connection();
+        Starter st = new Starter();
+        Funct fn = new Funct();
+        public Frm_Employee()
+        {
+            InitializeComponent();
+        }
+
+        private void Frm_Employee_Load(object sender, EventArgs e)
+        {
+            MDIStart parent = (MDIStart)this.MdiParent;
+            parent.mnu_master_employee_employee.Enabled = false;
+            this.clr();
+            this.dv_display();
+            dv.Width = this.Width - 18;
+        }
+
+        private void Frm_Employee_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            DialogResult cnfr = MessageBox.Show("Are You Sure To Close The Screen.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Information);
+            if (cnfr == DialogResult.Yes)
+            {
+                MDIStart parent = (MDIStart)this.MdiParent;
+                parent.mnu_master_employee_employee.Enabled = true;
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+            }
+        }
+
+        private void Frm_Employee_KeyDown(object sender, KeyEventArgs e)
+        {
+            MDIStart parent = (MDIStart)this.MdiParent;
+            if (e.KeyCode == Keys.F11)
+            {
+                e.Handled = true;
+                //if (st.editmode(Starter.usr_sl, parent.mnu_master_others_district.Name) == 1)
+                //{
+                Starter.comd_employee = "M";
+                this.clr();
+                this.dv_display();
+                txt_search.Focus();
+                //}
+            }
+        }
+
+        private void Frm_Employee_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            short keyascii = (short)Microsoft.VisualBasic.Strings.Asc(e.KeyChar);
+            if (keyascii == 27)
+            {
+                this.Close();
+            }
+        }
+
+        private void clr()
+        {
+            cmb_division.Text = "";
+            cmb_name.SelectedIndex = 0;
+            txt_name.Text = "";
+            cmb_category.Text = "";
+            cmb_emp_tp.SelectedIndex = 0;
+            cmb_vendor.Enabled = false;
+            txt_vendor_name.Enabled = false;
+            txt_emp_code.Text = "";
+            txt_device_code.Text = "";
+            txt_rfid_no.Text = "";
+            cmb_department.Text = "";
+            cmb_designation.Text = "";
+            cmb_authority.Text = "";
+            dt_join.Value = DateTime.Now;
+            dt_confirm.Value = DateTime.Now;
+            txt_gatepass_no.Text = "";
+            dt_validity.Value = DateTime.Now;
+            dt_dob.Value = DateTime.Now;
+            txt_aadhar.Text = "";
+            txt_pan.Text = "";
+            txt_pf.Text = "";
+            txt_UAN.Text = "";
+            txt_esic.Text = "";
+            txt_lwf.Text = "";
+            cmb_payment_mode.SelectedIndex = 0;
+            cmb_bank.Text = "";
+            txt_account.Text = "";
+            txt_ifsc.Text = "";
+            cmb_locked.SelectedIndex = 0;
+            txt_add1.Text = "";
+            txt_add2.Text = "";
+            txt_ps1.Text = "";
+            cmb_state1.Text = "";
+            cmb_dist1.Text = "";
+            txtstatcd1.Text = "0";
+            txtdistcd1.Text = "0";
+            txt_country1.Text = "";
+            txt_zip1.Text = "";
+            txt_ph1.Text = "";
+            txt_ph2.Text = "";
+            txt_add3.Text = "";
+            txt_add4.Text = "";
+            txt_ps2.Text = "";
+            cmb_state2.Text = "";
+            cmb_dist2.Text = "";
+            txtstatcd2.Text = "0";
+            txtdistcd2.Text = "0";
+            txt_country2.Text = "";
+            txt_zip2.Text = "";
+            txt_ph3.Text = "";
+            txt_ph4.Text = "";
+            dt_dob.Value = DateTime.Now;
+            cmb_gender.SelectedIndex = 0;
+            cmb_maritial.SelectedIndex = 0;
+            cmb_blood_group.SelectedIndex = 0;
+            txt_religion.Text = "";
+            txt_caste.Text = "";
+            txt_height.Text = "";
+            txt_weight.Text = "";
+            txt_chest.Text = "";
+            txt_vision.Text = "";
+            cmb_guardian_nm.SelectedIndex = 0;
+            txt_guardian_nm.Text = "";
+            txt_occupation.Text = "";
+            cmb_income.SelectedIndex = 0;
+            txt_nominee.Text = "";
+            txt_relation.Text = "";
+            dt_nom_DOB.Value = DateTime.Now;
+            txt_identification.Text = "";
+            cmb_edu_details.Text = "";
+            txt_sl.Text = "";
+            txt_institute_nm.Text = "";
+            cmb_exam_passed.Text = "";
+            txt_year.Text = "";
+            txt_mark.Text = "";
+            dt_marriage.Value = DateTime.Now; 
+            cmb_ot_allowed.SelectedIndex = 0;
+            cmb_ot_autocal.SelectedIndex = 0;
+            cmb_ot_payble.SelectedIndex = 0;
+            cmb_late_req.SelectedIndex = 0;
+            cmb_earlyout_req.SelectedIndex = 0;
+            cmbover.SelectedIndex = 0;
+            cmbday.SelectedIndex = 0;
+            txtfl1.Text = "";
+            time01.Text = "0000";
+            time02.Text = "0000";
+            time03.Text = "0000";
+            time04.Text = "0000";
+            time05.Text = "0000";
+            rd04.Checked = true;
+            cmb_halfday.SelectedIndex = 0;
+            txt_min_ot.Text = "";
+            txt_max_ot.Text = "";
+            cmb_week_off.SelectedIndex = 0;
+            cmb_shift_tp.SelectedIndex = 0;
+            cmbsearchtp.SelectedIndex = 0;
+            dv1.Rows.Clear();
+            txt_search.Text = "";
+            pict01.Image = null;
+            pic_speciman.Image = null;
+            pic_resume.Image = null;
+            pic_aadhar.Image = null;
+            pic_residence.Image = null;
+            pic_pan.Image = null;
+            pic_police.Image = null;
+            pic_medical.Image = null;
+            txtstafcd.Text = "0";
+            txtdesgcd.Text = "0";
+            txtdeptcd.Text = "0";
+            txtcatcd.Text = "0";
+            txtVenderSl.Text = "0";
+            txteducd.Text = "0";
+            txtauthcd.Text = "0";
+            txtcosl.Text = Starter.co_sl.ToString();
+            txtclcd.Text = "0";
+            txtshiftsl.Text = "0";
+            txtbankcd.Text = "0";
+            txtdivsl.Text = "";
+            txtgpsscd.Text = "";
+            txtnewdesgcd1.Text = "0";
+            if (Starter.comd_employee == "E")
+            {
+                this.Text = ("Employee Master . . .(ENTRY MODE)");
+            }
+            if (Starter.comd_employee == "M")
+            {
+                this.Text = ("Employee Master . . .(EDIT MODE)");
+            }
+            if (Starter.comd_employee == "D")
+            {
+                this.Text = ("Employee Master . . .(DELETE MODE)");
+            }
+            if (Starter.comd_employee == "V")
+            {
+                this.Text = ("Employee Master . . .(VIEW MODE)");
+            }
+        }
+
+        private void dv_display()
+        {
+            DataSet ds_view = cn.GetData("SELECT ROW_NUMBER() OVER(ORDER BY staf.doj,staf.staf_nm) AS 'Sl', division.div_nm as 'Division',staf.staf_nm as 'Staff', staf.emp_code as 'Emp.Code',staf.device_code as 'Dev.Code',dept.dept_nm as 'Department',desg.desg_nm as 'Designation',(CASE WHEN staf.emp_status='1' THEN 'Is Working' ELSE 'Not Working' END) as 'Status', ISNULL(desg.desg_cd,0) AS desg_cd,ISNULL(dept.dept_cd,0) AS 'dept_cd', staf.staf_sl FROM staf LEFT OUTER JOIN  division ON staf.div_sl = division.div_sl LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd  WHERE (staf.co_sl = " + Starter.co_sl + ") ORDER BY staf.doj,staf.staf_nm");
+            if (ds_view.Tables[0].Rows.Count != 0)
+            {
+                dv.DataSource = ds_view.Tables[0];
+                dv.Columns[0].Width = 30;
+                dv.Columns[1].Width = 140;
+                dv.Columns[2].Width = 170;
+                dv.Columns[3].Width = 120;
+                dv.Columns[4].Width = 100;
+                dv.Columns[5].Width = 120;
+                dv.Columns[6].Width = 110;
+                dv.Columns[7].Width = 70;
+                dv.Columns[8].Visible = false;
+                dv.Columns[9].Visible = false;
+                dv.Columns[10].Visible = false;
+                dv.ColumnHeadersDefaultCellStyle.Font = new Font("Arial Rounded MT Bold", 9.5F);
+            }
+            else
+            {
+                ds_view.Tables[0].Rows.Clear();
+                dv.DataSource = ds_view;
+            }
+        }
+
+        private void cmdexit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void cmdfresh_Click(object sender, EventArgs e)
+        {
+            this.clr();
+            this.dv_display();
+            if (Starter.comd_employee == "E")
+            {
+                txt_name.Focus();
+            }
+            else
+            {
+                dv.Focus();
+            }
+
+            if (dv.Width == 234)
+            {
+                while (dv.Width < this.Width - 18)
+                {
+                    dv.Width += 2;
+                }
+                Panel1.Visible = false;
+            }
+        }
+
+        private void cmdedit_Click(object sender, EventArgs e)
+        {
+            MDIStart parent = (MDIStart)this.MdiParent;
+            //if (st.editmode(Starter.usr_sl, parent.mnu_master_others_district.Name) == 1)
+            //{
+            if (dv.RowCount != 0)
+            {
+                if (dv.SelectedRows.Count != 0)
+                {
+                    Starter.comd_employee = "M";
+                    this.clr();
+                    dv.Focus();
+                    this.dv_select(int.Parse(dv.SelectedCells[10].Value.ToString()));
+                    if (dv.Width == this.Width - 18)
+                    {
+                        while (dv.Width > 234)
+                        {
+                            dv.Width += -2;
+                        }
+                        Panel1.Visible = true;
+                    }
+                }
+                //}
+            }
+        }
+
+        private void cmdadd_Click(object sender, EventArgs e)
+        {
+            MDIStart parent = (MDIStart)this.MdiParent;
+            //if (st.entrymode(Starter.usr_sl, parent.mnu_master_others_district.Name) == 1)
+            //{
+            Starter.comd_employee = "E";
+            this.clr();
+            if (dv.Width == this.Width - 18)
+            {
+                while (dv.Width > 234)
+                {
+                    dv.Width += -2;
+                }
+                Panel1.Visible = true;
+            }
+            cmb_division.Focus();
+            //}
+        }
+
+        private void cmdsave_Click(object sender, EventArgs e)
+        {
+            if (Starter.comd_employee != "V")
+            {
+                if (dv.Width != this.Width - 18)
+                {
+                    if (cmb_division.Text.Trim() == "" || int.Parse(txtdivsl.Text) == 0)
+                    {
+                        MessageBox.Show("The Division Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        cmb_division.Focus();
+                        return;
+                    }
+
+                    if (txt_name.Text.Trim() == "")
+                    {
+                        MessageBox.Show("The Staff Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        txt_name.Focus();
+                        return;
+                    }
+
+                    if (txt_emp_code.Text.Trim() == "")
+                    {
+                        MessageBox.Show("The Employee Code Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        txt_emp_code.Focus();
+                        return;
+                    }
+
+                    if (txt_device_code.Text.Trim() == "")
+                    {
+                        MessageBox.Show("The Device Code Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        txt_device_code.Focus();
+                        return;
+                    }
+
+                    if (cmb_emp_tp.SelectedIndex == 2)
+                    {
+                        if (cmb_vendor.Text.Trim() == "" || int.Parse(txtVenderSl.Text) == 0)
+                        {
+                            MessageBox.Show("The Vendor Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tab1.SelectedIndex = 0;
+                            cmb_vendor.Focus();
+                            return;
+                        }       
+                    }
+
+                    if (cmb_designation.Text.Trim() == "" || int.Parse(txtdesgcd.Text) == 0)
+                    {
+                        MessageBox.Show("The Division Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        cmb_designation.Focus();
+                        return;
+                    }
+                    if (Starter.software_type == "E")
+                    {
+                        if (Starter.report_author == "1")
+                        {
+                            if (cmb_designation.Text.Trim() != "" || int.Parse(txtdesgcd.Text) != 0)
+                            {
+                                if(int.Parse(txtisadmin.Text) == 0)
+                                {
+                                    if (cmb_authority.Text.Trim() != "" || int.Parse(txtauthcd.Text) != 0)
+                                    {
+                                        MessageBox.Show("The Reporting Authority Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                        tab1.SelectedIndex = 0;
+                                        cmb_authority.Focus();
+                                        return;
+                                    }
+                                }
+                            }
+                        }
+                    }
+
+                    if (cmb_category.Text.Trim() == "" || int.Parse(txtcatcd.Text) == 0)
+                    {
+                        MessageBox.Show("The Category Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        cmb_category.Focus();
+                        return;
+                    }
+
+                    if (cmb_department.Text.Trim() == "" || int.Parse(txtdeptcd.Text) == 0)
+                    {
+                        MessageBox.Show("The Department Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        cmb_department.Focus();
+                        return;
+                    }
+
+                    if (txt_aadhar.Text.Trim() == "")
+                    {
+                        MessageBox.Show("The Aadhar Card No. Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        tab1.SelectedIndex = 0;
+                        txt_aadhar.Focus();
+                        return;
+                    }
+                    else
+                    {
+                        if  (txt_aadhar.Text.Trim().Length != 12)
+                        {
+                            MessageBox.Show("The Aadhar No Must Be 12 Character.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tab1.SelectedIndex = 0;
+                            txt_aadhar.Focus();
+                            return;
+                        }
+                    }
+
+                    if (cmb_shift_tp.SelectedIndex == 0)
+                    {
+                        if (txtshift.Text.Trim() == "" || int.Parse(txtshiftsl.Text) == 0)
+                        {
+                            MessageBox.Show("The Shift Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tab1.SelectedIndex = 3;
+                            txtshift.Focus();
+                            return;
+                        }
+                    }
+                    else if (cmb_shift_cycle.SelectedIndex == 2)
+                    {
+                        if (cmb_shift_cycle.Text.Trim() == "" || int.Parse(txtclcd.Text) == 0)
+                        {
+                            MessageBox.Show("The Shift Cycle Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tab1.SelectedIndex = 3;
+                            cmb_shift_cycle.Focus();
+                            return;
+                        }
+                    }
+
+                    if (cmb_payment_mode.SelectedIndex == 1)
+                    {
+                        if (cmb_bank.Text.Trim() == "" || int.Parse(txtbankcd.Text) == 0)
+                        {
+                            MessageBox.Show("The Bank Name Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            cmb_bank.Focus();
+                            return;
+                        }
+
+                        if (txt_account.Text.Trim() == "")
+                        {
+                            MessageBox.Show("The Account No. Should Not Be Blank.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            tab1.SelectedIndex = 0;
+                            txt_account.Focus();
+                            return;
+                        }
+                    }                  
+
+                    this.save_record();
+                    if (Starter.comd_employee == "E")
+                    {
+                        cmb_division.Focus();
+                    }
+                    else
+                    {
+                        dv.Focus();
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show("Invalid User Authentication.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void save_record()
+        {
+            //For Entry Section
+            int otallowed = cmb_ot_allowed.SelectedIndex + 1;
+            int autocalot = cmb_ot_autocal.SelectedIndex + 1;
+            int otpayble = cmb_ot_payble.SelectedIndex + 1;
+            int ltmarreq = cmb_late_req.SelectedIndex + 1;
+            int earlyotmark = cmb_earlyout_req.SelectedIndex + 1;
+
+
+
+            if (Starter.comd_employee == "E")
+            {
+                DialogResult cnfr1 = MessageBox.Show("Are You Sure To Save The Record.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button1);
+                if (cnfr1 == DialogResult.Yes)
+                {
+                    DataSet ds1 = cn.GetData("SELECT emp_code FROM staf WHERE emp_code = '" + txt_emp_code.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "");
+                    if (ds1.Tables[0].Rows.Count != 0)
+                    {
+                        MessageBox.Show("Sorry The District Name Is Already Present.", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                    else
+                    {
+                        DataSet ds2 = cn.GetData("SELECT MAX(staf.staf_sl)as staf_cd FROM staf");
+                        int stafmx = 1;
+                        if (!DBNull.Value.Equals(ds2.Tables[0].Rows[0][0]))
+                        {
+                            stafmx = int.Parse(ds2.Tables[0].Rows[0][0].ToString()) + 1;
+                        }
+                        txtstafcd.Text = stafmx.ToString();
+
+                        int weekoff = 0;
+                        int punchreq = 0;
+                        int emp_tp = 0;
+
+                        string chk1 = (string)Interaction.IIf(chk_fstlst_punch_cal.Checked, "1", "0");
+                        string chk2 = (string)Interaction.IIf(chk_wrkduration.Checked, "1", "0");
+                        string ismw = (string)Interaction.IIf(chk_ismw.Checked, "Y", "N");
+
+                        if (cmb_week_off.SelectedIndex ==  0)
+                        {
+                            weekoff = 1;
+                        }
+                        else if (cmb_week_off.SelectedIndex == 1)
+                        {
+                            weekoff = 0;
+                        }
+
+                        if (rd03.Checked == true)
+                        {
+                            punchreq = 1;
+                        }
+                        else if (rd04.Checked == true)
+                        {
+                            punchreq = 2;
+                        }
+                        else if (rd05.Checked == true)
+                        {
+                            punchreq = 3;
+                        }
+                        else if (rd06.Checked == true)
+                        {
+                            punchreq = 4;
+                        }
+                        
+                        if (Starter.software_type == "L")
+                        {
+                            emp_tp = cmb_emp_tp.SelectedIndex + 3;
+                        }
+                        else
+                        {
+                            emp_tp = cmb_emp_tp.SelectedIndex + 1;
+                        }
+                        cn.start();
+                        cn.Execute("INSERT INTO staf(staf_sl, nm_pri, staf_nm, short_nm, emp_code, device_code," + 
+                        "card_no, emp_status, emp_tp, desg_cd, dept_cd, cat_sl, doj, dol, doc, div_sl, co_sl," + 
+                        "add1, add2, dist_cd1, stat_cd1, zip_cd1, ph1, ph2, add3, add4, dist_cd2, stat_cd2," + 
+                        "zip_cd2, ph3, ph4, dob, gndr, married, nation, religion, caste, height, weight, chest," + 
+                        "vision, f_g_h, fgh_nm, occu, income, shift_tp, shift_sl, cycle_sl, OT_allow, OT_early," + 
+                        "OT_late, late_mark, early_mark, early_time, late_time, leave_time, max_work, week_off," +  
+                        "punch_req, inter_punch, overstay_allow, day_perweek, created_by, created_dt, modified_by," + 
+                        "modified_dt, pf_no, esic_no, pan_no, pay_mode, bank_sl, acc_no, autocal_ot, rec_lock," + 
+                        "uan_no, aadhar_no, gate_pass_no, gate_expiry_dt, vnd_sl, pf_nom, relation, nom_dob," + 
+                        "identity_mark, lwf_no, ifsc_code, reason_leave, ot_payable, half_day, min_ot, max_ot," + 
+                        "deduct_break ,edu_cd, dom,report_autho, ps1, ps2, blood_group, ismw) VALUES(" + 
+                        int.Parse(txtstafcd.Text) + ", '" + cmb_name.Text.Trim() + "', '" + txt_name.Text.Trim() + 
+                        "', '" + txtshort.Text.Trim() + "', '" + txt_emp_code.Text.Trim() + 
+                        "', '" + txt_device_code.Text.Trim() + "', '" + txt_rfid_no.Text.Trim() + 
+                        "', '1', '" + emp_tp + "', " + int.Parse(txtdesgcd.Text) + ", " + int.Parse(txtdeptcd.Text) + 
+                        ", " + int.Parse(txtcatcd.Text) + ", '" + dt_join.Value.ToString("dd/MMM/yyyy") + 
+                        "', '', '', " + int.Parse(txtdivsl.Text) + ", " + Starter.co_sl + 
+                        ", '" + txt_add1.Text.Trim() + "', '" + txt_add2.Text.Trim() +  
+                        "', " + int.Parse(txtdistcd1.Text) + ", " + int.Parse(txtstatcd1.Text) + 
+                        ", '" + txt_zip1.Text.Trim() +  "', '" + txt_ph1.Text.Trim() + "', '" + txt_ph2.Text.Trim() + 
+                        "', '" + txt_add3.Text.Trim() + "', '" + txt_add4.Text.Trim() +  
+                        "', " + int.Parse(txtdistcd2.Text) + ", " + int.Parse(txtstatcd2.Text) + 
+                        ", '" + txt_zip2.Text.Trim() +  "', '" + txt_ph3.Text.Trim() + "', '" + txt_ph4.Text.Trim() + 
+                        "', '" + dt_dob.Value.ToString("dd/MMM/yyyy") + "', '" + cmb_gender.Text.Substring(0, 1) + 
+                        "', '" + cmb_maritial.Text.Substring(0, 1) + "', 'INDIAN', '" + txt_religion.Text.Trim() + 
+                        "', '" + txt_caste.Text.Trim() +  "', '" + txt_height.Text.Trim() + 
+                        "', '" + txt_weight.Text.Trim() + "', '" + txt_chest.Text.Trim() + 
+                        "', '" + txt_vision.Text.Trim() + "', '" + cmb_guardian_nm.Text.Substring(0, 1) + 
+                        "', '" + txt_guardian_nm.Text.Trim() + "', '" + txt_occupation.Text.Trim() + 
+                        "', '" + cmb_income.Text.Substring(0, 1) + "', '" + cmb_shift_tp.Text.Substring(0, 1) + 
+                        "', 0, " + int.Parse(txtclcd.Text) + ", '" + otallowed + "', " + int.Parse(time01.Text) + 
+                        ", " + int.Parse(time02.Text) + ", '" + ltmarreq + "', '" + earlyotmark + 
+                        "', " + int.Parse(time05.Text) +  ", " + int.Parse(time03.Text) + 
+                        ", " + int.Parse(time04.Text) + ", GETDATE(), '" + weekoff + "', '" + punchreq + 
+                        "', '" + chk1 + "', '" + cmbover.Text.Substring(0, 1) + "', '" + cmbday.Text + 
+                        "', " + Starter.usr_sl + ", GETDATE(), 0, '', '" + txt_pf.Text.Trim() + 
+                        "', '" + txt_esic.Text.Trim() + "', '" + txt_pan.Text.Trim() + 
+                        "', '" + cmb_payment_mode.Text.Substring(0, 1) + "', " + int.Parse(txtbankcd.Text) + 
+                        ", '" + txt_account.Text.Trim() + "', '" + autocalot + 
+                        "', '" + cmb_locked.Text.Substring(0, 1) + "', '" + txt_UAN.Text.Trim() + 
+                        "', '" + txt_aadhar.Text.Trim() + "', '" + txt_gatepass_no.Text.Trim() + 
+                        "', GETDATE(), " + int.Parse(txtVenderSl.Text) + ", '" + txt_nominee.Text.Trim() + 
+                        "', '" + txt_relation.Text.Trim() + "', '" + dt_nom_DOB.Value.ToString("dd/MMM/yyyy") + 
+                        "', '" + txt_identification.Text.Trim() + "', '" + txt_lwf.Text.Trim() + 
+                        "', '" + txt_ifsc.Text.Trim() + "', '', '" + otpayble + 
+                        "', '" + cmb_halfday.Text.Substring(0, 1) + "', " + int.Parse(txt_min_ot.Text) + 
+                        ", " + int.Parse(txt_max_ot.Text) + ", '" + chk2 + "', " + int.Parse(txteducd.Text) + 
+                        ", '" + dt_marriage.Value.ToString("dd/MMM/yyyy") + "', " + int.Parse(txtauthcd.Text) + 
+                        ", '" + txt_ps1.Text.Trim() + "', '" + txt_ps2.Text.Trim() + 
+                        "', '" + cmb_blood_group.Text.Substring(0, 1) + "', '" + ismw + "')");
+
+                        //Inserting Into Table staf_desg
+                        cn.Execute("INSERT INTO staf_desg(staf_sl, desg_cd, effect_dt, created_by, created_dt," + 
+                        "modified_by, modified_dt, active, co_sl) VALUES (" + int.Parse(txtstafcd.Text) + 
+                        ", " + int.Parse(txtdesgcd.Text) + ", '" + DateTime.Now + "', " + Starter.usr_sl + 
+                        ", GETDATE(), 0, '', 'Y', " + Starter.co_sl + ")");
+
+                        //Inserting Into Table staf_dept
+                        cn.Execute("INSERT INTO staf_dept(staf_sl, dept_cd, effect_dt, created_by, created_dt," + 
+                        "modified_by, modified_dt, active, co_sl) VALUES (" + int.Parse(txtstafcd.Text) + 
+                        ", " + int.Parse(txtdeptcd.Text) + ", '" + DateTime.Now + "', " + Starter.usr_sl + 
+                        ", GETDATE(), 0, '', 'Y', " + Starter.co_sl + ")");
+
+                        //Inserting Into Table staf_status
+                        cn.Execute("INSERT INTO staf_status(staf_sl, status_tp, effect_dt, created_by, created_dt," + 
+                        "modified_by, modified_dt, active, reason_leave, co_sl) VALUES (" + int.Parse(txtstafcd.Text) + 
+                        ", 1, '" + DateTime.Now + "', " + Starter.usr_sl + 
+                        ", GETDATE(), 0, '', 'Y', '', " + Starter.co_sl + ")");
+
+                        //Inserting into GatePass Table
+                        DataSet ds3 = cn.GetData("SELECT MAX(staf_gatepass.pass_sl)as passmx FROM staf_gatepass");
+                        int passmx = 1;
+                        if (!DBNull.Value.Equals(ds3.Tables[0].Rows[0][0]))
+                        {
+                            passmx = int.Parse(ds3.Tables[0].Rows[0][0].ToString()) + 1;
+                        }
+                        cn.Execute("INSERT INTO staf_gatepass(pass_sl, pass_dt, staf_sl, co_sl, pass_no," +
+                        " valid_upto, active, created_by, created_dt, phy_fit, phy_fit_date, training," +
+                        " training_date) VALUES (" + passmx + ", GETDATE(), " + int.Parse(txtstafcd.Text) + 
+                        ", " + Starter.co_sl + ", '" + txt_gatepass_no.Text.Trim() + "', '" + 
+                        dt_validity.Value.Date.ToString("dd/MMM/yyyy") + "', 'Y', " + 
+                        Starter.usr_sl + ", GETDATE(), 'Y', GETDATE(), 'Y', GETDATE())");
+
+                        cn.Execute("UPDATE staf SET gate_pass = 'Y' WHERE staf_sl = " + int.Parse(txtstafcd.Text) + "");
+
+                        cn.close();
+                        MessageBox.Show("Record Added Successfully . . .", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                    this.clr();
+                    this.dv_display();
+                    cmb_division.Focus();
+                }
+            }
+
+            //For Modification Section
+            if (Starter.comd_employee == "M")
+            {
+                DialogResult cnfr2 = MessageBox.Show("Are You Sure To Modify The Record.", "Confirmation", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                if (cnfr2 == DialogResult.Yes)
+                {
+                    DataSet ds3 = cn.GetData("SELECT emp_code FROM staf WHERE staf_sl = " + int.Parse(txtstafcd.Text) + " AND co_sl = " + Starter.co_sl + "");
+                    if (ds3.Tables[0].Rows.Count != 0)
+                    {
+                        int weekoff = 0;
+                        int punchreq = 0;
+
+                        string chk1 = (string)Interaction.IIf(chk_fstlst_punch_cal.Checked, "1", "0");
+                        string chk2 = (string)Interaction.IIf(chk_wrkduration.Checked, "1", "0");
+                        string ismw = (string)Interaction.IIf(chk_ismw.Checked, "Y", "N");
+
+                        if (cmb_week_off.SelectedIndex == 0)
+                        {
+                            weekoff = 1;
+                        }
+                        else if (cmb_week_off.SelectedIndex == 1)
+                        {
+                            weekoff = 0;
+                        }
+
+                        if (rd03.Checked == true)
+                        {
+                            punchreq = 1;
+                        }
+                        else if (rd04.Checked == true)
+                        {
+                            punchreq = 2;
+                        }
+                        else if (rd05.Checked == true)
+                        {
+                            punchreq = 3;
+                        }
+                        else if (rd06.Checked == true)
+                        {
+                            punchreq = 4;
+                        }
+
+                        DateTime doj;
+                        DateTime dol;
+                        DateTime docn;
+                        DateTime bdt;
+                        DateTime nmDOB;
+                        DateTime nmDOM;
+
+                        doj = dt_join.Value = DateTime.Now;
+                        dol = DateTime.Now;
+                        docn = dt_confirm.Value = DateTime.Now;
+                        bdt = dt_dob.Value = DateTime.Now;
+                        nmDOB = dt_nom_DOB.Value = DateTime.Now;
+                        nmDOM = dt_marriage.Value = DateTime.Now;
+
+                        int emp_tp = 0;
+                        if (Starter.software_type == "L")
+                        {
+                            emp_tp = cmb_emp_tp.SelectedIndex + 3;
+                        }
+                        else
+                        {
+                            emp_tp = cmb_emp_tp.SelectedIndex + 1;
+                        }
+                        cn.start();
+                        cn.Execute("UPDATE staf SET nm_pri = '" + cmb_name.Text.Trim() + "', staf_nm = '" + txt_name.Text.Trim() +
+                        "', short_nm = '" + txtshort.Text.Trim() + "', emp_code = '" + txt_emp_code.Text.Trim() + 
+                        "', device_code = '" + txt_device_code.Text.Trim() + "', card_no = '" + txt_rfid_no.Text.Trim() + 
+                        "', emp_tp = '" + emp_tp + "', desg_cd = " + int.Parse(txtdesgcd.Text) +
+                        ", dept_cd = " + int.Parse(txtdeptcd.Text) + ", doj = '" + doj + "', dol = '" + dol + "', doc = '" + docn +
+                        "', div_sl = " + int.Parse(txtdivsl.Text) + ", add1 = '" + txt_add1.Text.Trim() + "', add2 = '" + txt_add2.Text.Trim() +
+                        "', dist_cd1 = " + int.Parse(txtdistcd1.Text) + ", stat_cd1 = " + int.Parse(txtstatcd1.Text) + 
+                        ", zip_cd1 = '" + txt_zip1.Text.Trim() + "', ph1 = '" + txt_ph1.Text.Trim() + "', ph2 = '" + txt_ph2.Text.Trim() +
+                        "', add3 = '" + txt_add3.Text.Trim() + "', add4 = '" + txt_add4.Text.Trim() + 
+                        "', dist_cd2 = " + int.Parse(txtdistcd2.Text) + ", zip_cd2 = '" + txt_zip2.Text.Trim() +
+                        "', ph3 = '" + txt_ph3.Text.Trim() + "', ph4 = '" + txt_ph4.Text.Trim() + "', stat_cd2 = " + int.Parse(txtstatcd2.Text) +
+                        ", dob = '" + bdt + "', gndr = '" + cmb_gender.Text.Substring(0, 1) + "', married = '" + cmb_maritial.Text.Substring(0, 1) +
+                        "', religion = '" + txt_religion.Text.Trim() + "', caste = '" + txt_caste.Text.Trim() +
+                        "', height = '" + txt_height.Text.Trim() + "', weight = '" + txt_weight.Text.Trim() + "', chest = '" + txt_chest.Text.Trim() +
+                        "', vision = '" + txt_vision.Text.Trim() + "', f_g_h = '" + cmb_guardian_nm.Text.Substring(0, 1) + 
+                        "', fgh_nm = '" + txt_guardian_nm.Text.Trim() + "', occu = '" + txt_occupation.Text.Trim() + 
+                        "', income = '" + cmb_income.Text.Substring(0, 1) + "', shift_tp = '" + cmb_shift_tp.Text.Substring(0, 1) + 
+                        "', OT_allow = '" + otallowed + "', OT_early = " + int.Parse(time01.Text) + ", OT_late = " + int.Parse(time02.Text) +
+                        ", late_mark = '" + ltmarreq + "', early_mark = '" + earlyotmark + "', early_time = " + int.Parse(time05.Text) +
+                        ", late_time = " + int.Parse(time03.Text) + ", leave_time = " + int.Parse(time04.Text) + ", max_work = GETDATE(), " +
+                        " week_off = '" + weekoff + "', punch_req = '" + punchreq + "', inter_punch = '" + chk1 + 
+                        "', overstay_allow = '" + cmbover.Text.Substring(0, 1) + "', day_perweek = '" + cmbday.Text + 
+                        "', co_sl = " + int.Parse(txtcosl.Text) + ", cat_sl = " + int.Parse(txtcatcd.Text) + 
+                        ", shift_sl = " + int.Parse(txtshiftsl.Text) + ", cycle_sl = " + int.Parse(txtclcd.Text) + ", pf_no = '" + txt_pf.Text.Trim() +
+                        "', esic_no = '" + txt_esic.Text.Trim() + "', pan_no = '" + txt_pan.Text.Trim() + 
+                        "', pay_mode = '" + cmb_payment_mode.Text.Substring(0, 1) + "', bank_sl = " + int.Parse(txtbankcd.Text) +
+                        ", acc_no = '" + txt_account.Text.Trim() + "', autocal_ot = '" + autocalot + 
+                        "', rec_lock = '" + cmb_locked.Text.Substring(0, 1) + "', uan_no =  '" + txt_UAN.Text.Trim() +
+                        "', aadhar_no = '" + txt_aadhar.Text.Trim() + "', gate_pass_no = '" + txt_gatepass_no.Text.Trim() +
+                        "', vnd_sl = " + int.Parse(txtVenderSl.Text) + ", gate_expiry_dt = '" + dt_validity.Value.ToString("dd/MMM/yyyy") +
+                        "', pf_nom = '" + txt_nominee.Text.Trim() + "', relation = '" + txt_relation.Text.Trim() + "', nom_dob = '" + nmDOB +
+                        "', identity_mark = '" + txt_identification.Text.Trim() + "', lwf_no = '" + txt_lwf.Text.Trim() +
+                        "', ifsc_code = '" + txt_ifsc.Text.Trim() + "', ot_payable = '" + otpayble + "', modified_by = " + Starter.usr_sl +
+                        ", modified_dt = GETDATE(), half_day = '" + cmb_halfday.Text.Substring(0, 1) + "', min_ot = " + int.Parse(txt_min_ot.Text) +
+                        ", max_ot = " + int.Parse(txt_max_ot.Text) + ", deduct_break = '" + chk2 + "', edu_cd = " + int.Parse(txteducd.Text) +
+                        ", dom = '" + nmDOM + "', report_autho = " + int.Parse(txtauthcd.Text) + ", ps1 = '" + txt_ps1.Text.Trim() +
+                        "', ps2 = '" + txt_ps2.Text.Trim() + "', blood_group = '" + cmb_blood_group.Text.Substring(0, 1) + 
+                        "', ismw = '" + ismw + "' WHERE staf_sl = " + int.Parse(txtstafcd.Text) + " AND co_sl = " + Starter.co_sl + "");
+                        cn.close();
+
+                        MessageBox.Show("Record Modified Successfully . . .", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+
+                }
+                this.clr();
+                this.dv_display();
+                dv.Focus();
+            }
+            if (Starter.usr_tp == "O")
+            {
+                MessageBox.Show("Invalid User Authentication", "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+        }
+
+        private void sender_MouseEnter(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            control.ForeColor = Color.Blue;
+        }
+
+        private void sender_MouseLeave(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            control.ForeColor = Color.Black;
+        }
+
+        private void sender_Enter(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            control.BackColor = Color.LightGoldenrodYellow;
+            control.ForeColor = Color.Red;
+        }
+
+        private void sender_Leave(object sender, EventArgs e)
+        {
+            Control control = sender as Control;
+            control.BackColor = Color.White;
+            control.ForeColor = Color.Black;
+        }
+
+        private void cmb_ot_allowed_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmb_ot_allowed.SelectedIndex == 0)
+            {
+                cmb_ot_autocal.SelectedIndex = 0;
+                cmb_ot_autocal.Enabled = false;
+            }
+            else
+            {
+                cmb_ot_autocal.SelectedIndex = 0;
+                cmb_ot_autocal.Enabled = true;
+            }
+        }
+
+        private void cmb_division_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_name, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_name_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_name, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_name_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_category, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_category_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_emp_tp, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_emp_tp_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(cmb_vendor.Enabled == true)
+            {
+                fn.Key(cmb_vendor, e); 
+            }
+            else
+            {
+                fn.Key(txt_emp_code, e);
+            }
+            fn.SPkey(e);
+        }
+
+        private void cmb_vendor_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_vendor_name, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_vendor_name_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_emp_code, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_emp_code_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_device_code, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_device_code_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_rfid_no, e);
+            fn.SPkey(e);
+            fn.NUMkey(e);
+        }
+
+        private void txt_rfid_no_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_department, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_department_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_designation, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_designation_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_authority, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_authority_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(dt_join, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_join_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(dt_confirm, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_confirm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_gatepass_no, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_gatepass_no_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(dt_validity, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_validity_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_aadhar, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_aadhar_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_pan, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_pan_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_pf, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_pf_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_UAN, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_UAN_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_esic, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_esic_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_lwf, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_lwf_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_payment_mode, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_payment_mode_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_bank, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_bank_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_account, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_account_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ifsc, e);
+            fn.SPkey(e);
+            fn.NUMkey(e);
+        }
+
+        private void txt_ifsc_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_locked, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_locked_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            this.tab1.SelectedIndex = 1;
+            fn.Key(txt_add1, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_add1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_add2, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_add2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ps1, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_ps1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_state1, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_state1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_zip1, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_dist1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_zip1, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_zip1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ph1, e);
+            fn.SPkey(e);
+            fn.NUMkey(e);
+        }
+
+        private void txt_ph1_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ph2, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_ph2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_add3, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_add3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_add4, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_add4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ps2, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_ps2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_state2, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_state2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_zip2, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_dist2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_zip2, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_zip2_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ph3, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_ph3_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_ph4, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_ph4_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            this.tab1.SelectedIndex = 2;
+            fn.Key(dt_dob, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_dob_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_gender, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_gender_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_maritial, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_maritial_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_blood_group, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_blood_group_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_religion, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_religion_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_caste, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_caste_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_height, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_height_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_weight, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_weight_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_chest, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_chest_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_vision, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_vision_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_guardian_nm, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_guardian_nm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_guardian_nm, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_guardian_nm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_occupation, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_occupation_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_income, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_income_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_nominee, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_nominee_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_relation, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_relation_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(dt_nom_DOB, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_nom_DOB_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_identification, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_identification_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_edu_details, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_edu_details_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_institute_nm, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_institute_nm_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            short keyascii = (short)Strings.Asc(e.KeyChar);
+            if (keyascii == 13)
+            {
+                if (txt_institute_nm.Text.Trim() != "")
+                {
+                    e.Handled = true;
+                    cmb_exam_passed.Focus();
+                    fn.SPkey(e);
+                }
+                else
+                {
+                    e.Handled = true;
+                    this.tab1.SelectedIndex = 3;
+                    cmb_ot_allowed.Focus();
+                    fn.SPkey(e);
+                }
+            }
+        }
+
+        private void cmb_exam_passded_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_year, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_year_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_mark, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_mark_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmdnxt, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_ot_allowed_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(cmb_ot_allowed.SelectedIndex == 0)
+            {
+                fn.Key(cmb_ot_payble,e);
+            }
+            else
+            {
+                fn.Key(cmb_ot_autocal, e);
+            }            
+        }
+
+        private void cmb_ot_autocal_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_ot_payble, e);
+        }
+
+        private void cmb_ot_payble_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_late_req, e);
+        }
+
+        private void cmb_late_req_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_earlyout_req, e);
+        }
+
+        private void cmb_earlyout_req_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(time05, e);
+            fn.SPkey(e);
+        }
+
+        private void time05_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(time03, e);
+            fn.SPkey(e);
+        }
+
+        private void time03_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(time04, e);
+            fn.SPkey(e);
+        }
+
+        private void time04_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_halfday, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_halfday_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(dt_work, e);
+            fn.SPkey(e);
+        }
+
+        private void dt_work_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_min_ot, e);
+            fn.SPkey(e);
+        }
+
+        private void txt_min_ot_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_max_ot, e);
+            fn.SPkey(e);
+            fn.NUMkey(e);
+        }
+
+        private void txt_max_ot_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_week_off, e);
+            fn.SPkey(e);
+            fn.NUMkey(e);
+        }
+
+        private void cmb_week_off_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmb_shift_tp, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_shift_tp_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(cmb_shift_tp.SelectedIndex == 2)
+            {
+                fn.Key(cmb_shift_cycle, e);
+            }
+            else
+            {
+                fn.Key(cmdsave,e);
+            }
+            fn.SPkey(e);
+        }
+
+        private void cmb_shift_cycle_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(cmdsave, e);
+            fn.SPkey(e);
+        }
+
+        private void cmb_shift_tp_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmb_shift_tp.SelectedIndex == 0)
+            {
+                lblnm.Visible = true;
+                txtshift.Visible = true;
+                lblcycle.Visible = false;
+                cmb_shift_cycle.Visible = false;
+                txtclcd.Text = "";
+                cmb_shift_cycle.Text = "";
+            }
+            else if(cmb_shift_tp.SelectedIndex == 1)
+            {
+                lblnm.Visible = false;
+                txtshift.Text = "";
+                txtshiftsl.Text = "";
+                txtshift.Visible = false;
+                txtshift.Enabled = false;
+                lblcycle.Visible = false;
+                cmb_shift_cycle.Visible = false;
+                txtclcd.Text = "";
+                cmb_shift_cycle.Text = "";
+            }
+            else if(cmb_shift_tp.SelectedIndex == 2)
+            {
+                lblcycle.Visible = true;
+                lblnm.Visible = false;
+                cmb_shift_cycle.Visible = true;
+                txtshiftsl.Text = "";
+            }
+        }
+
+        private void cmb_division_GotFocus(object sender, EventArgs e)
+        {
+            cmb_division.Height = 100;
+            fn.populate(cmb_division, txtdivsl, "SELECT div_nm FROM division WHERE co_sl = " + Starter.co_sl + " ORDER BY div_nm");
+        }
+
+        private void cmb_division_LostFocus(object sender, EventArgs e)
+        {
+            cmb_division.Height = 21;
+        }
+
+        private void cmb_division_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtdivsl, "SELECT div_sl FROM division WHERE div_nm = '" + cmb_division.Text.Trim() + "'");
+        }
+
+        private void cmb_division_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_division, "SELECT div_nm FROM division WHERE div_nm = '" + cmb_division.Text.Trim() + "'", "Please Select A Valid Division Name.");
+        }
+
+        private void cmb_category_GotFocus(object sender, EventArgs e)
+        {
+            cmb_category.Height = 120;
+            fn.populate(cmb_category, txtcatcd, "SELECT cat_nm FROM category ORDER BY cat_nm");
+        }
+
+        private void cmb_category_LostFocus(object sender, EventArgs e)
+        {
+            cmb_category.Height = 21;
+        }
+
+        private void cmb_category_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtcatcd, "SELECT * FROM category WHERE cat_nm = '" + cmb_category.Text.Trim() + "'");
+        }
+
+        private void cmb_category_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_category, "SELECT cat_nm FROM category WHERE cat_nm = '" + cmb_category.Text.Trim() + "'", "Please Select A Valid Category Name.");
+        }
+
+        private void cmb_vendor_GotFocus(object sender, EventArgs e)
+        {
+            cmb_vendor.Height = 100;
+            fn.populate(cmb_vendor, txtVenderSl, "SELECT vnd_code FROM vendormst WHERE rec_lock = 'N' ORDER BY vnd_code");
+        }
+
+        private void cmb_vendor_LostFocus(object sender, EventArgs e)
+        {
+            cmb_vendor.Height = 21;
+        }
+
+        private void cmb_vendor_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtVenderSl, "SELECT vnd_sl FROM vendormst WHERE rec_lock = 'N' AND vnd_code = '" + cmb_vendor.Text.Trim() + "'");
+        }
+
+        private void cmb_vendor_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_vendor, "SELECT vnd_code FROM category WHERE vnd_code = '" + cmb_vendor.Text.Trim() + "'", "Please Select A Valid Vendor Name.");
+        }
+
+        private void cmb_department_GotFocus(object sender, EventArgs e)
+        {
+            cmb_department.Height = 100;
+            fn.populate(cmb_department, txtdeptcd, "SELECT dept_nm FROM dept WHERE co_sl = " + Starter.co_sl + " ORDER BY dept_nm");
+        }
+
+        private void cmb_department_LostFocus(object sender, EventArgs e)
+        {
+            cmb_department.Height = 21;
+        }
+
+        private void cmb_department_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtdeptcd, "SELECT dept_cd FROM dept WHERE dept_nm = '" + cmb_department.Text.Trim() + "'");
+        }
+
+        private void cmb_department_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_department, "SELECT dept_nm FROM dept WHERE dept_nm = '" + cmb_department.Text.Trim() + "'", "Please Select A Valid Department Name.");
+        }
+
+        private void cmb_designation_GotFocus(object sender, EventArgs e)
+        {
+            cmb_designation.Height = 100;
+            fn.populate(cmb_designation, txtdesgcd, "SELECT desg_nm FROM desg WHERE co_sl = " + Starter.co_sl + " ORDER BY desg_nm");
+        }
+
+        private void cmb_designation_LostFocus(object sender, EventArgs e)
+        {
+            cmb_designation.Height = 21;
+        }
+
+        private void cmb_designation_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtdesgcd, "SELECT desg_cd FROM desg WHERE desg_nm = '" + cmb_designation.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "");
+        }
+
+        private void cmb_designation_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_designation, "SELECT desg_nm FROM desg WHERE desg_nm = '" + cmb_designation.Text.Trim() + "'", "Please Select A Valid Designation Name.");
+        }
+
+        private void cmb_authority_GotFocus(object sender, EventArgs e)
+        {
+            cmb_authority.Height = 100;
+            //fn.populate(cmb_authority, txtauthcd, "SELECT desg_nm FROM desg WHERE co_sl = " + Starter.co_sl + " ORDER BY desg_nm");
+        }
+
+        private void cmb_authority_LostFocus(object sender, EventArgs e)
+        {
+            cmb_authority.Height = 21;
+        }
+
+        private void cmb_authority_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtauthcd, "SELECT staf_sl FROM staf WHERE staf_nm = '" + cmb_authority.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "");
+        }
+
+        private void cmb_authority_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_authority, "SELECT staf_nm FROM staf WHERE staf_nm = '" + cmb_authority.Text.Trim() + "'", "Please Select A Valid Reporting Authority Name.");
+        }
+
+        private void cmb_bank_GotFocus(object sender, EventArgs e)
+        {
+            cmb_bank.Height = 100;
+            fn.populate(cmb_bank, txtbankcd, "SELECT bank_nm FROM bank ORDER BY bank_nm");
+        }
+
+        private void cmb_bank_LostFocus(object sender, EventArgs e)
+        {
+            cmb_bank.Height = 21;
+        }
+
+        private void cmb_bank_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtbankcd, "SELECT bank_sl FROM bank WHERE bank_nm = '" + cmb_bank.Text.Trim() + "'");
+        }
+
+        private void cmb_bank_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_bank, "SELECT bank_nm FROM bank WHERE bank_nm = '" + cmb_bank.Text.Trim() + "'", "Please Select A Valid Bank Name.");
+        }
+
+        private void cmb_state1_GotFocus(object sender, EventArgs e)
+        {
+            cmb_state1.Height = 100;
+            fn.populate(cmb_state1, txtstatcd1, "SELECT stat_nm FROM stat ORDER BY stat_nm");
+        }
+
+        private void cmb_state1_LostFocus(object sender, EventArgs e)
+        {
+            cmb_state1.Height = 21;
+        }
+
+        private void cmb_state1_Validated(object sender, EventArgs e)
+        {
+            DataSet dsw = cn.GetData("SELECT stat.stat_cd, dist.dist_nm, dist.dist_cd, stat.stat_nm, stat.cntr_sl, cntr.cntr_nm FROM  stat INNER JOIN dist ON stat.stat_cd = dist.stat_cd LEFT OUTER JOIN  cntr ON stat.cntr_sl = cntr.cntr_sl WHERE stat.stat_nm = '" + cmb_state1.Text.Trim() + "'");
+            if (dsw.Tables[0].Rows.Count != 0)
+            {
+                cmb_dist1.Text = dsw.Tables[0].Rows[0]["dist_nm"].ToString();
+                txtdistcd1.Text = dsw.Tables[0].Rows[0]["dist_cd"].ToString(); 
+                txt_country1.Text = dsw.Tables[0].Rows[0]["cntr_nm"].ToString();
+                txtstatcd1.Text = dsw.Tables[0].Rows[0]["stat_cd"].ToString();
+                //if (state = int.Parse(txtstatcd1.Text)
+                //    {
+                //    chk_ismw.Checked = false;
+                //}
+                //else
+                //   {
+                //    chk_ismw.Checked = true;
+                //}
+            }
+
+        }
+
+        private void cmb_state1_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_state1, "SELECT stat_nm FROM stat WHERE stat_nm = '" + cmb_state1.Text.Trim() + "'", "Please Select A Valid state Name.");
+        }
+
+        private void cmb_dist1_GotFocus(object sender, EventArgs e)
+        {
+            cmb_dist1.Height = 100;
+            fn.populate(cmb_dist1, txtdistcd1, "SELECT dist_nm FROM dist WHERE rec_lock='N' ORDER BY dist_nm");
+        }
+
+        private void cmb_dist1_LostFocus(object sender, EventArgs e)
+        {
+            cmb_dist1.Height = 21;
+        }
+
+        private void cmb_dist1_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtdistcd1, "SELECT dist_cd FROM dist WHERE dist_nm = '" + cmb_dist1.Text.Trim() + "'");
+        }
+
+        private void cmb_dist1_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_dist1, "SELECT dist_nm FROM dist WHERE rec_lock='N' AND dist_nm = '" + cmb_dist1.Text.Trim() + "'", "Please Select A Valid District Name.");
+        }
+
+        private void cmb_state2_GotFocus(object sender, EventArgs e)
+        {
+            cmb_state2.Height = 100;
+            fn.populate(cmb_state2, txtstatcd2, "SELECT stat_nm FROM stat ORDER BY stat_nm");
+        }
+
+        private void cmb_state2_LostFocus(object sender, EventArgs e)
+        {
+            cmb_state2.Height = 21;
+        }
+
+        private void cmb_state2_Validated(object sender, EventArgs e)
+        {
+            DataSet dsw = cn.GetData("SELECT stat.stat_cd, dist.dist_nm, dist.dist_cd, stat.stat_nm, stat.cntr_sl, cntr.cntr_nm FROM  stat INNER JOIN dist ON stat.stat_cd = dist.stat_cd LEFT OUTER JOIN  cntr ON stat.cntr_sl = cntr.cntr_sl WHERE stat.stat_nm = '" + cmb_state2.Text.Trim() + "'");
+            if (dsw.Tables[0].Rows.Count != 0)
+            {
+                cmb_dist2.Text = dsw.Tables[0].Rows[0]["dist_nm"].ToString();
+                txtdistcd2.Text = dsw.Tables[0].Rows[0]["dist_cd"].ToString();
+                txt_country2.Text = dsw.Tables[0].Rows[0]["cntr_nm"].ToString();
+                txtstatcd2.Text = dsw.Tables[0].Rows[0]["stat_cd"].ToString();
+            }
+        }
+
+        private void cmb_state2_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_state2, "SELECT stat_nm FROM stat WHERE stat_nm = '" + cmb_state2.Text.Trim() + "'", "Please Select A Valid state Name.");
+        }
+
+        private void cmb_dist2_GotFocus(object sender, EventArgs e)
+        {
+            cmb_dist2.Height = 100;
+            fn.populate(cmb_dist2, txtdistcd2, "SELECT dist_nm FROM dist WHERE rec_lock='N' ORDER BY dist_nm");
+        }
+
+        private void cmb_dist2_LostFocus(object sender, EventArgs e)
+        {
+            cmb_dist2.Height = 21;
+        }
+
+        private void cmb_dist2_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtdistcd2, "SELECT dist_cd FROM dist WHERE dist_nm = '" + cmb_dist2.Text.Trim() + "'");
+        }
+
+        private void cmb_dist2_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_dist2, "SELECT dist_nm FROM dist WHERE rec_lock='N' AND dist_nm = '" + cmb_dist2.Text.Trim() + "'", "Please Select A Valid District Name.");
+        }
+
+        private void cmb_edu_details_GotFocus(object sender, EventArgs e)
+        {
+            cmb_edu_details.Height = 100;
+            fn.populate(cmb_edu_details, txteducd, "SELECT edu_nm FROM education WHERE rec_lock = 'N' AND co_sl = " + Starter.co_sl + " ORDER BY education.edu_nm");
+        }
+
+        private void cmb_edu_details_LostFocus(object sender, EventArgs e)
+        {
+            cmb_edu_details.Height = 21;
+        }
+
+        private void cmb_edu_details_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txteducd, "SELECT edu_cd FROM education WHERE edu_nm = '" + cmb_edu_details.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "");
+        }
+
+        private void cmb_edu_details_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_edu_details, "SELECT edu_nm FROM education WHERE edu_nm = '" + cmb_edu_details.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "", "Please Select A Valid Education Details Name.");
+        }
+
+        private void cmb_exam_passed_GotFocus(object sender, EventArgs e)
+        {
+            cmb_exam_passed.Height = 100;
+            fn.populate(cmb_exam_passed, txtexmpasscd, "SELECT edu_nm FROM education WHERE co_sl = " + Starter.co_sl + " ORDER BY education.edu_nm");
+        }
+
+        private void cmb_exam_passed_LostFocus(object sender, EventArgs e)
+        {
+            cmb_exam_passed.Height = 21;
+        }
+
+        private void cmb_exam_passed_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtexmpasscd, "SELECT edu_cd FROM education WHERE edu_nm = '" + cmb_exam_passed.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "");
+        }
+
+        private void cmb_exam_passed_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_exam_passed, "SELECT edu_nm FROM education WHERE edu_nm = '" + cmb_exam_passed.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "", "Please Select A Valid Education Name.");
+        }
+
+        private void cmb_shift_cycle_GotFocus(object sender, EventArgs e)
+        {
+            cmb_shift_cycle.Height = 100;
+            fn.populate(cmb_shift_cycle, txtclcd, "SELECT cycle_nm FROM cycle1 ORDER BY cycle_nm");
+        }
+
+        private void cmb_shift_cycle_LostFocus(object sender, EventArgs e)
+        {
+            cmb_shift_cycle.Height = 21;
+        }
+
+        private void cmb_shift_cycle_Validated(object sender, EventArgs e)
+        {
+            fn.validated(txtclcd, "SELECT cycle_sl FROM cycle1 WHERE cycle_nm = '" + cmb_shift_cycle.Text.Trim() + "'");
+        }
+
+        private void cmb_shift_cycle_Validating(object sender, CancelEventArgs e)
+        {
+            fn.validating(cmb_shift_cycle, "SELECT cycle_nm FROM cycle1 WHERE cycle_nm = '" + cmb_shift_cycle.Text.Trim() + "' AND co_sl = " + Starter.co_sl + "", "Please Select A Shift Cycle Name.");
+        }
+
+        private void dv_select(int staf_cd)
+        {
+            DataSet ds = cn.GetData("SELECT desg.is_admin, stat.stat_nm, ISNULL(cntr.cntr_nm, '') AS cntr_nm, category.cat_nm, shift.shift_nm, cycle1.cycle_nm, quali.slno, quali.ins_nm, quali.yr, quali.mark_per, ISNULL(desg.desg_nm, '') AS 'desg_nm', ISNULL(division.div_nm, '') AS 'div_nm', ISNULL(dept.dept_nm, '') AS 'dept_nm', ISNULL(vendormst.vnd_code, '') AS vnd_code, ISNULL(vendormst.vnd_name, '') AS vnd_name, ISNULL(education.edu_nm, '') AS edu_nm, ISNULL(dist.dist_nm, '') AS 'dist_nm2', ISNULL(dist_1.dist_nm, '') AS 'dist_nm', bank.bank_nm, staf.* FROM vendormst RIGHT OUTER JOIN dist AS dist_1 RIGHT OUTER JOIN staf LEFT OUTER JOIN bank ON staf.bank_sl = bank.bank_sl ON dist_1.dist_cd = staf.dist_cd1 LEFT OUTER JOIN dist ON staf.dist_cd2 = dist.dist_cd LEFT OUTER JOIN education ON staf.edu_cd = education.edu_cd ON vendormst.vnd_sl = staf.vnd_sl LEFT OUTER JOIN division ON staf.div_sl = division.div_sl LEFT OUTER JOIN cycle1 ON staf.cycle_sl = cycle1.cycle_sl LEFT OUTER JOIN category ON staf.cat_sl = category.cat_sl LEFT OUTER JOIN shift ON staf.shift_sl = shift.shift_sl LEFT OUTER JOIN cntr RIGHT OUTER JOIN stat ON cntr.cntr_sl = stat.cntr_sl ON staf.stat_cd1 = stat.stat_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN quali ON staf.staf_sl = quali.staf_sl  WHERE (staf.staf_sl = " + staf_cd + ") AND (staf.co_sl=" + Starter.co_sl + ")");
+            if (ds.Tables[0].Rows.Count != 0)
+            {
+                txt_identification.Text = ds.Tables[0].Rows[0]["identity_mark"].ToString();
+                txt_lwf.Text = ds.Tables[0].Rows[0]["lwf_no"].ToString();
+                txt_UAN.Text = ds.Tables[0].Rows[0]["uan_no"].ToString();
+                txt_aadhar.Text = ds.Tables[0].Rows[0]["aadhar_no"].ToString();
+                txt_gatepass_no.Text = ds.Tables[0].Rows[0]["gate_pass_no"].ToString();
+                dt_validity.Text = ds.Tables[0].Rows[0]["gate_expiry_dt"].ToString();
+                txtVenderSl.Text = ds.Tables[0].Rows[0]["vnd_sl"].ToString();
+                txt_vendor_name.Text = ds.Tables[0].Rows[0]["vnd_name"].ToString();
+                cmb_vendor.Text = ds.Tables[0].Rows[0]["dist_nm"].ToString();
+                cmb_name.Text = ds.Tables[0].Rows[0]["nm_pri"].ToString();
+                txt_name.Text = ds.Tables[0].Rows[0]["staf_nm"].ToString();
+                txtstafcd.Text = ds.Tables[0].Rows[0]["staf_sl"].ToString();
+                txtshort.Text = ds.Tables[0].Rows[0]["short_nm"].ToString();
+                txt_emp_code.Text = ds.Tables[0].Rows[0]["emp_code"].ToString();
+                txt_device_code.Text = ds.Tables[0].Rows[0]["device_code"].ToString();
+                txt_rfid_no.Text = ds.Tables[0].Rows[0]["card_no"].ToString();
+                cmb_blood_group.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["blood_group"].ToString()) - 1;
+                if (ds.Tables[0].Rows[0]["rec_lock"].ToString() == "N")
+                {
+                    cmb_locked.SelectedIndex = 0;
+                }
+                else
+                {
+                    cmb_locked.SelectedIndex = 1;
+                }
+
+                if (ds.Tables[0].Rows[0]["half_day"].ToString() == "Y")
+                {
+                    cmb_halfday.SelectedIndex = 1;
+                }
+                else
+                {
+                    cmb_halfday.SelectedIndex = 0;
+                }
+                txt_min_ot.Text = ds.Tables[0].Rows[0]["min_ot"].ToString();
+                txt_max_ot.Text = ds.Tables[0].Rows[0]["max_ot"].ToString();
+
+                if (ds.Tables[0].Rows[0]["deduct_break"].ToString() == "1")
+                {
+                    chk_wrkduration.Checked = true;
+                }
+                else
+                {
+                    chk_wrkduration.Checked = false;
+                }
+                txtdesgcd.Text = ds.Tables[0].Rows[0]["desg_cd"].ToString();
+                cmb_designation.Text = ds.Tables[0].Rows[0]["desg_nm"].ToString();
+                txtisadmin.Text = ds.Tables[0].Rows[0]["is_admin"].ToString();
+                txtdeptcd.Text = ds.Tables[0].Rows[0]["dept_cd"].ToString();
+                cmb_department.Text = ds.Tables[0].Rows[0]["dept_nm"].ToString();
+                txtnm.Text = Starter.co_nm;
+                txtcosl.Text = Starter.co_sl.ToString();
+                txtcatcd.Text = ds.Tables[0].Rows[0]["cat_sl"].ToString();
+                cmb_category.Text = ds.Tables[0].Rows[0]["cat_nm"].ToString();
+                dt_join.Text = ds.Tables[0].Rows[0]["doj"].ToString();
+                dt_confirm.Text = ds.Tables[0].Rows[0]["doc"].ToString();
+                txtdivsl.Text = ds.Tables[0].Rows[0]["div_sl"].ToString();
+                cmb_division.Text = ds.Tables[0].Rows[0]["div_nm"].ToString();
+                txt_add1.Text = ds.Tables[0].Rows[0]["add1"].ToString();
+                txt_add2.Text = ds.Tables[0].Rows[0]["add2"].ToString();
+                txt_ps1.Text = ds.Tables[0].Rows[0]["ps1"].ToString();
+                txt_ps2.Text = ds.Tables[0].Rows[0]["ps2"].ToString();
+                cmb_dist1.Text = ds.Tables[0].Rows[0]["dist_nm"].ToString();
+                txtstatcd1.Text = ds.Tables[0].Rows[0]["stat_cd1"].ToString();
+                cmb_state1.Text = ds.Tables[0].Rows[0]["stat_nm"].ToString();
+                txt_country1.Text = ds.Tables[0].Rows[0]["cntr_nm"].ToString();
+                txt_zip1.Text = ds.Tables[0].Rows[0]["zip_cd1"].ToString();
+                txt_ph1.Text = ds.Tables[0].Rows[0]["ph1"].ToString();
+                txt_ph2.Text = ds.Tables[0].Rows[0]["ph2"].ToString();
+                txt_add3.Text = ds.Tables[0].Rows[0]["add1"].ToString();
+                txt_add4.Text = ds.Tables[0].Rows[0]["add2"].ToString();
+                cmb_dist2.Text = ds.Tables[0].Rows[0]["dist_nm2"].ToString();
+                txtstatcd2.Text = ds.Tables[0].Rows[0]["stat_cd2"].ToString();
+                txt_zip2.Text = ds.Tables[0].Rows[0]["zip_cd2"].ToString();
+                txt_ph3.Text = ds.Tables[0].Rows[0]["ph3"].ToString();
+                txt_ph4.Text = ds.Tables[0].Rows[0]["ph4"].ToString();
+
+                DataSet dsw = cn.GetData("SELECT stat.stat_nm, ISNULL(cntr.cntr_nm,'') AS cntr_nm FROM stat LEFT OUTER JOIN cntr ON stat.cntr_sl = cntr.cntr_sl WHERE (stat.stat_cd = " + txtstatcd2.Text.Trim() + ")");
+                if (dsw.Tables[0].Rows.Count != 0)
+                {
+                    cmb_state2.Text = dsw.Tables[0].Rows[0]["stat_nm"].ToString();
+                    txt_country2.Text = dsw.Tables[0].Rows[0]["cntr_nm"].ToString();
+                }
+                else
+                {
+                    cmb_state2.Text = "";
+                    txt_country2.Text = "";
+                }
+                dt_dob.Text = ds.Tables[0].Rows[0]["dob"].ToString();
+                cmb_gender.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["gndr"].ToString()) - 1;
+                cmb_maritial.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["married"].ToString()) - 1;
+                txt_religion.Text = ds.Tables[0].Rows[0]["religion"].ToString();
+                txt_caste.Text = ds.Tables[0].Rows[0]["caste"].ToString();
+                txt_weight.Text = ds.Tables[0].Rows[0]["weight"].ToString();
+                txt_height.Text = ds.Tables[0].Rows[0]["Height"].ToString();
+                txt_chest.Text = ds.Tables[0].Rows[0]["chest"].ToString();
+                txt_vision.Text = ds.Tables[0].Rows[0]["vision"].ToString();
+                if (ds.Tables[0].Rows[0]["f_g_h"].ToString() == "1")
+                {
+                    cmb_guardian_nm.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["f_g_h"].ToString() == "2")
+                {
+                    cmb_guardian_nm.SelectedIndex = 1;
+                }
+                else if (ds.Tables[0].Rows[0]["f_g_h"].ToString() == "3")
+                {
+                    cmb_guardian_nm.SelectedIndex = 2;
+                }
+                txt_guardian_nm.Text = ds.Tables[0].Rows[0]["fgh_nm"].ToString();
+                txt_occupation.Text = ds.Tables[0].Rows[0]["occu"].ToString();
+                //cmb_income.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["income"].ToString()) - 1;
+                txt_nominee.Text = ds.Tables[0].Rows[0]["pf_nom"].ToString();
+                txt_relation.Text = ds.Tables[0].Rows[0]["relation"].ToString();
+                dt_nom_DOB.Text = ds.Tables[0].Rows[0]["nom_dob"].ToString();
+                dt_marriage.Text = ds.Tables[0].Rows[0]["dom"].ToString();
+                cmb_edu_details.Text = ds.Tables[0].Rows[0]["edu_nm"].ToString();
+                txteducd.Text = ds.Tables[0].Rows[0]["edu_cd"].ToString();
+                if(ds.Tables[0].Rows[0]["OT_allow"].ToString() == "1")
+                {
+                    cmb_ot_allowed.SelectedIndex = 0;
+                }
+                else if(ds.Tables[0].Rows[0]["OT_allow"].ToString() == "2")
+                {
+                    cmb_ot_allowed.SelectedIndex = 1;
+                }
+                cmbover.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["overstay_allow"].ToString()) - 1;
+                txtshift.Text = ds.Tables[0].Rows[0]["shift_nm"].ToString();
+                txtshiftsl.Text = ds.Tables[0].Rows[0]["shift_sl"].ToString();
+                cmb_shift_cycle.Text = ds.Tables[0].Rows[0]["cycle_nm"].ToString();
+                txtclcd.Text = ds.Tables[0].Rows[0]["cycle_sl"].ToString();
+
+
+                if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "None")
+                {
+                    cmbday.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "1")
+                {
+                    cmbday.SelectedIndex = 1;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "2")
+                {
+                    cmbday.SelectedIndex = 2;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "3")
+                {
+                    cmbday.SelectedIndex = 3;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "4")
+                {
+                    cmbday.SelectedIndex = 4;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "5")
+                {
+                    cmbday.SelectedIndex = 5;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "6")
+                {
+                    cmbday.SelectedIndex = 6;
+                }
+                else if (ds.Tables[0].Rows[0]["day_perweek"].ToString() == "7")
+                {
+                    cmbday.SelectedIndex = 7;
+                }
+                time01.Text = int.Parse(ds.Tables[0].Rows[0]["OT_early"].ToString()).ToString("#0000");
+                time02.Text = int.Parse(ds.Tables[0].Rows[0]["OT_late"].ToString()).ToString("#0000");
+                if (ds.Tables[0].Rows[0]["late_mark"].ToString() == "1")
+                {
+                    cmb_late_req.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["late_mark"].ToString() == "2")
+                {
+                    cmb_late_req.SelectedIndex = 1;
+                }
+
+                if (ds.Tables[0].Rows[0]["early_mark"].ToString() == "1")
+                {
+                    cmb_earlyout_req.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["early_mark"].ToString() == "2")
+                {
+                    cmb_earlyout_req.SelectedIndex = 1;
+                }
+                time05.Text = int.Parse(ds.Tables[0].Rows[0]["early_time"].ToString()).ToString("#0000");
+                time03.Text = int.Parse(ds.Tables[0].Rows[0]["late_time"].ToString()).ToString("#0000");
+                time04.Text = int.Parse(ds.Tables[0].Rows[0]["leave_time"].ToString()).ToString("#0000");
+                dt_work.Text = ds.Tables[0].Rows[0]["max_work"].ToString();
+
+                if (ds.Tables[0].Rows[0]["inter_punch"].ToString() == "1")
+                {
+                    chk_fstlst_punch_cal.Checked = true;
+                }
+                else 
+                {
+                    chk_fstlst_punch_cal.Checked = false;
+                }
+                if (ds.Tables[0].Rows[0]["week_off"].ToString() == "1")
+                {
+                    cmb_week_off.SelectedIndex = 0;
+                }
+                else
+                {
+                    cmb_week_off.SelectedIndex = 1;
+                }
+
+                if (ds.Tables[0].Rows[0]["punch_req"].ToString() == "1")
+                {
+                    rd03.Checked = true;
+                }
+                else if (ds.Tables[0].Rows[0]["punch_req"].ToString() == "2")
+                {
+                    rd04.Checked = true;
+                }
+                else if (ds.Tables[0].Rows[0]["punch_req"].ToString() == "3")
+                {
+                    rd05.Checked = true;
+                }
+                else if (ds.Tables[0].Rows[0]["punch_req"].ToString() == "4")
+                {
+                    rd06.Checked = true;
+                }
+                txt_pf.Text = ds.Tables[0].Rows[0]["pf_no"].ToString();
+                txt_esic.Text = ds.Tables[0].Rows[0]["esic_no"].ToString();
+                txt_pan.Text = ds.Tables[0].Rows[0]["pan_no"].ToString();
+                cmb_payment_mode.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["pay_mode"].ToString()) - 1;
+                cmb_bank.Text = ds.Tables[0].Rows[0]["bank_nm"].ToString();
+                txtbankcd.Text = ds.Tables[0].Rows[0]["bank_sl"].ToString();
+                txt_account.Text = ds.Tables[0].Rows[0]["acc_no"].ToString();
+                txt_ifsc.Text = ds.Tables[0].Rows[0]["ifsc_code"].ToString();
+                if (ds.Tables[0].Rows[0]["autocal_ot"].ToString() == "1")
+                {
+                    cmb_ot_autocal.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["autocal_ot"].ToString() == "2")
+                {
+                    cmb_ot_autocal.SelectedIndex = 1;
+                }
+                if (ds.Tables[0].Rows[0]["ot_payable"].ToString() == "1")
+                {
+                    cmb_ot_payble.SelectedIndex = 0;
+                }
+                else if (ds.Tables[0].Rows[0]["ot_payable"].ToString() == "2")
+                {
+                    cmb_ot_payble.SelectedIndex = 1;
+                }
+
+                cmb_authority.Enabled = false;
+                cmb_authority.Text = "";
+                cmb_shift_tp.SelectedIndex = int.Parse(ds.Tables[0].Rows[0]["shift_tp"].ToString()) - 1;
+                //If(Software_type == "L")
+                //{
+                //cmbauthority.Enabled = true;
+                //}
+                //    DataSet dsw3 = cn.GetData("select * from staf where staf_sl=" & dssel.Tables(0).Rows(0).Item("report_autho") & " and co_sl=" & cosl & "")
+                //    If dsautho.Tables(0).Rows.Count <> 0 Then
+                //        cmbauthority.Items.Clear()
+                //        txtauthcd.Text = dsautho.Tables(0).Rows(0).Item("report_autho")
+                //        cmbauthority.Text = dsautho.Tables(0).Rows(0).Item("staf_nm")
+                //        Dim dsstaf As DataSet = Me.recursedisp(Trim(cmbdesg.Text))
+                //        If dsstaf.Tables(0).Rows.Count <> 0 Then
+                //            cmbauthority.Items.Clear()
+                //            For i As Integer = 0 To dsstaf.Tables(0).Rows.Count - 1
+                //                cmbauthority.Items.Add(dsstaf.Tables(0).Rows(i).Item(0))
+                //            Next
+                //        End If
+                //    End If
+                //End If
+
+                DataSet dslicence = cn.GetData("SELECT * FROM company");
+                if (dslicence.Tables[0].Rows.Count != 0)
+                {
+                    switch (dslicence.Tables[0].Rows[0]["license_key"].ToString())
+                    {
+                        case "@D!150214Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!170321Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!140711Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@~D160001Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!160348Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!180753Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!200203Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        case "@D!21E117Z5ZD%JK!FZWWZLGM^JGZD|E|L!~A#": 
+                            cmb_vendor.Enabled = true;
+                            break;
+                        default:
+                            cmb_vendor.Enabled = false;
+                            break;
+                    }
+                }
+
+                DataSet dsauth = cn.GetData("SELECT repo_auth FROM setting_company");
+                if (dsauth.Tables[0].Rows.Count != 0)
+
+                {
+                    string aaa = "";
+                    aaa = dsauth.Tables[0].Rows[0][0].ToString();
+                    if(aaa == "")
+                    {
+                        cmb_authority.Enabled = false;
+                    }
+                    else
+                    {
+                        cmb_authority.Enabled = true;
+                    }
+                }
+
+                //Disabling Device Code
+                //DataSet ds_devcode = cn.GetData("SELECT COUNT(log_sl) FROM elog WHERE device_code = '" + txt_device_code.Text.Trim() + "'");
+                //if (!DBNull.Value.Equals(ds.Tables[0].Rows[0][0].ToString()))
+                //{
+                //    if(ds_devcode.Tables[0].Rows[0][0].ToString() == "");
+                //    {
+                //        txt_device_code.ReadOnly = false;
+                //    }
+                //    else
+                //    {
+                //        txt_device_code.ReadOnly = true;
+                //    }
+                //}
+
+                //retrieving Education Details
+                //DataSet ds_view = cn.GetData("SELECT quali.*, education.edu_nm FROM quali LEFT OUTER JOIN education ON quali.edu_cd = education.edu_cd WHERE (quali.staf_sl = " + staf_cd + ") and education.co_sl=" + Starter.co_sl + "");
+                //if (ds_view.Tables[0].Rows.Count != 0)
+                //{
+                //    dv.DataSource = ds_view.Tables[0];
+                //    dv.Columns[0].Width = 65;
+                //    dv.Columns[1].Width = 300;
+                //    dv.Columns[2].Width = 300;
+                //    dv.Columns[3].Visible = false;
+                //    dv.Columns[4].Visible = false;
+                //    dv.ColumnHeadersDefaultCellStyle.Font = new Font("Arial Rounded MT Bold", 9.5F);
+                //}
+                //else
+                //{
+                //    ds_view.Tables[0].Rows.Clear();
+                //    dv.DataSource = ds_view;
+                //}
+            }
+            dv.Focus();
+        }
+
+        private void dv_key_View()
+        {
+            if (Starter.comd_employee != "E")
+            {
+                if (dv.Rows.Count != 0)
+                {
+                    if (dv.SelectedRows.Count != 0)
+                    {
+                        this.dv_select(int.Parse(dv.SelectedCells[10].Value.ToString()));
+                    }
+                }
+            }
+        }
+
+        private void dv_Click(object sender, EventArgs e)
+        {
+            this.dv_key_View();
+        }
+
+        private void dv_KeyDown(object sender, KeyEventArgs e)
+        {
+            this.dv_key_View();
+        }
+
+        private void dv_KeyUp(object sender, KeyEventArgs e)
+        {
+            this.dv_key_View();
+        }
+
+        private void dv_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            fn.Key(txt_name, e);
+        }
+
+        private void txt_search_TextChanged(object sender, EventArgs e)
+        {
+            if (cmbsearchtp.SelectedIndex == 0)
+            {
+                DataSet ds_view = cn.GetData("SELECT ROW_NUMBER() OVER(ORDER BY staf.doj,staf.staf_nm) AS 'Sl', division.div_nm as 'Division',staf.staf_nm as 'Staff', staf.emp_code as 'Emp.Code',staf.device_code as 'Dev.Code',dept.dept_nm as 'Department',desg.desg_nm as 'Designation',(CASE WHEN staf.emp_status='1' THEN 'Is Working' ELSE 'Not Working' END) as 'Status', ISNULL(desg.desg_cd,0) AS desg_cd,ISNULL(dept.dept_cd,0) AS 'dept_cd', staf.staf_sl FROM staf LEFT OUTER JOIN  division ON staf.div_sl = division.div_sl LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd WHERE staf.device_code LIKE '" + txt_search.Text.Trim() + "%'  AND staf.co_sl = " + Starter.co_sl + " ORDER BY staf.doj ,staf.staf_nm");
+            }
+            else if (cmbsearchtp.SelectedIndex == 1)
+            {
+                DataSet ds_view = cn.GetData("SELECT ROW_NUMBER() OVER(ORDER BY staf.doj,staf.staf_nm) AS 'Sl', division.div_nm as 'Division',staf.staf_nm as 'Staff', staf.emp_code as 'Emp.Code',staf.device_code as 'Dev.Code',dept.dept_nm as 'Department',desg.desg_nm as 'Designation',(CASE WHEN staf.emp_status='1' THEN 'Is Working' ELSE 'Not Working' END) as 'Status', ISNULL(desg.desg_cd,0) AS desg_cd,ISNULL(dept.dept_cd,0) AS 'dept_cd', staf.staf_sl FROM staf LEFT OUTER JOIN  division ON staf.div_sl = division.div_sl LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd  WHERE staf.staf_nm LIKE '" + txt_search.Text.Trim() + "%'  AND staf.co_sl = " + Starter.co_sl + " ORDER BY staf.doj ,staf.staf_nm");
+            }
+            else if (cmbsearchtp.SelectedIndex == 2)
+            {
+                DataSet ds_view = cn.GetData("SELECT ROW_NUMBER() OVER(ORDER BY staf.doj,staf.staf_nm) AS 'Sl', division.div_nm as 'Division',staf.staf_nm as 'Staff', staf.emp_code as 'Emp.Code',staf.device_code as 'Dev.Code',dept.dept_nm as 'Department',desg.desg_nm as 'Designation',(CASE WHEN staf.emp_status='1' THEN 'Is Working' ELSE 'Not Working' END) as 'Status', ISNULL(desg.desg_cd,0) AS desg_cd,ISNULL(dept.dept_cd,0) AS 'dept_cd', staf.staf_sl FROM staf LEFT OUTER JOIN  division ON staf.div_sl = division.div_sl LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd  WHERE staf.emp_code LIKE '" + txt_search.Text.Trim() + "%'  AND staf.co_sl = " + Starter.co_sl + " ORDER BY staf.doj ,staf.staf_nm");
+            }
+            else if (cmbsearchtp.SelectedIndex == 3)
+            {
+                DataSet ds_view = cn.GetData("SELECT ROW_NUMBER() OVER(ORDER BY staf.doj,staf.staf_nm) AS 'Sl', division.div_nm as 'Division',staf.staf_nm as 'Staff', staf.emp_code as 'Emp.Code',staf.device_code as 'Dev.Code',dept.dept_nm as 'Department',desg.desg_nm as 'Designation',(CASE WHEN staf.emp_status='1' THEN 'Is Working' ELSE 'Not Working' END) as 'Status', ISNULL(desg.desg_cd,0) AS desg_cd,ISNULL(dept.dept_cd,0) AS 'dept_cd', staf.staf_sl FROM staf LEFT OUTER JOIN  division ON staf.div_sl = division.div_sl LEFT OUTER JOIN desg ON staf.desg_cd = desg.desg_cd LEFT OUTER JOIN dept ON staf.dept_cd = dept.dept_cd  WHERE staf.card_no LIKE '" + txt_search.Text.Trim() + "%'  AND staf.co_sl = " + Starter.co_sl + " ORDER BY staf.doj ,staf.staf_nm");
+                if (ds_view.Tables[0].Rows.Count != 0)
+                {
+                    dv.DataSource = ds_view.Tables[0];
+                    dv.Columns[0].Width = 30;
+                    dv.Columns[1].Width = 140;
+                    dv.Columns[2].Width = 170;
+                    dv.Columns[3].Width = 120;
+                    dv.Columns[4].Width = 100;
+                    dv.Columns[5].Width = 120;
+                    dv.Columns[6].Width = 110;
+                    dv.Columns[7].Width = 70;
+                    dv.Columns[8].Visible = false;
+                    dv.Columns[9].Visible = false;
+                    dv.Columns[10].Visible = false;
+                }
+                else
+                {
+                    ds_view.Tables[0].Rows.Clear();
+                    dv.DataSource = ds_view;
+                }
+            }
+        }
+    }
+}
